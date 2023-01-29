@@ -4,6 +4,7 @@
  */
 
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { Movie, Studio } from "./data";
 
 declare global {
   namespace ReactNavigation {
@@ -13,8 +14,8 @@ declare global {
 
 export type RootStackParamList = {
   Home: undefined;
-  Studio: undefined;
-  Detail: undefined;
+  Studio: { studio: Studio };
+  Detail: { movie: Movie };
 };
 
 export type RootStackScreenProps<Screen extends keyof RootStackParamList> =
