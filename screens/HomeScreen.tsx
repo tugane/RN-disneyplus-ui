@@ -9,49 +9,39 @@ import {
   View,
 } from "react-native";
 import React from "react";
-import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { RootStackParamList } from "../types";
-import Spacing from "../constants/Spacing";
 import { LinearGradient } from "expo-linear-gradient";
 import Colors from "../constants/Colors";
+import Spacing from "../constants/Spacing";
 import { movies, studios, trendingMovies } from "../data";
-import FontSize from "../constants/FontSize";
 import Font from "../constants/Font";
+import FontSize from "../constants/FontSize";
+import Movie from "../components/Movie";
+import MoviesList from "../components/MoviesList";
+import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { RootStackParamList } from "../types";
 
+const studioHeight = 70;
 type Props = NativeStackScreenProps<RootStackParamList, "Home">;
 
-const studioSize = 70;
-
-const HomeScreen: React.FC<Props> = ({ navigation: { navigate } }) => {
+const HomeScreen: React.FC<Props> = ({ navigation }) => {
   const { width } = Dimensions.get("window");
   const TrendingMovieWidth = width - Spacing * 4;
   const TrendingMovieHeight = 200;
 
-  const MovieHeight = 170;
-  const MovieWidth = 110;
-
   return (
-    <LinearGradient
-      style={{
-        flex: 1,
-      }}
-      colors={[Colors.dark, Colors.black]}
-    >
-      <ScrollView
-        style={{
-          flex: 1,
-        }}
-      >
-        <SafeAreaView>
+    <LinearGradient colors={[Colors.dark, Colors.black]} style={{ flex: 1 }}>
+      <SafeAreaView>
+        <ScrollView>
           <Image
             resizeMode="contain"
             style={{
-              height: Spacing * 5,
               width: Spacing * 10,
+              height: Spacing * 5,
               alignSelf: "center",
             }}
             source={require("../assets/images/logo.png")}
           />
+
           <ScrollView
             horizontal
             contentContainerStyle={{
@@ -59,17 +49,18 @@ const HomeScreen: React.FC<Props> = ({ navigation: { navigate } }) => {
             }}
             showsHorizontalScrollIndicator={false}
             snapToInterval={TrendingMovieWidth + Spacing}
-            decelerationRate={"fast"}
             pagingEnabled
+            decelerationRate="fast"
           >
             {trendingMovies.map((movie) => (
               <TouchableOpacity
+                onPress={() => navigation.navigate("Detail", { movie: movie })}
                 style={{
-                  width: TrendingMovieWidth,
                   height: TrendingMovieHeight,
-                  marginRight: Spacing,
-                  overflow: "hidden",
+                  width: TrendingMovieWidth,
                   borderRadius: Spacing / 2,
+                  overflow: "hidden",
+                  marginRight: Spacing,
                 }}
                 key={movie.id}
               >
@@ -80,21 +71,30 @@ const HomeScreen: React.FC<Props> = ({ navigation: { navigate } }) => {
               </TouchableOpacity>
             ))}
           </ScrollView>
-          <ScrollView style={{ paddingHorizontal: Spacing * 2 }} horizontal>
+
+          <ScrollView
+            style={{
+              paddingHorizontal: Spacing * 2,
+            }}
+            horizontal
+          >
             {studios.map((studio) => (
               <TouchableOpacity
                 style={{
-                  width: studioSize,
-                  height: studioSize,
-                  overflow: "hidden",
-                  borderRadius: Spacing,
+                  height: studioHeight,
+                  width: studioHeight,
                   marginRight: Spacing,
-                  borderColor: Colors.border,
-                  borderWidth: 1,
                 }}
                 key={studio.id}
               >
-                <LinearGradient colors={[Colors.darkBlue, Colors.blue]}>
+                <LinearGradient
+                  style={{
+                    borderRadius: Spacing,
+                    borderWidth: 1,
+                    borderColor: Colors.border,
+                  }}
+                  colors={[Colors.darkBlue, Colors.blue]}
+                >
                   <Image
                     resizeMode="contain"
                     source={studio.image}
@@ -108,88 +108,10 @@ const HomeScreen: React.FC<Props> = ({ navigation: { navigate } }) => {
               </TouchableOpacity>
             ))}
           </ScrollView>
-          <View
-            style={{
-              padding: Spacing * 2,
-            }}
-          >
-            <Text
-              style={{
-                fontSize: FontSize.medium,
-                color: Colors.text,
-                fontFamily: Font["poppins-bold"],
-              }}
-            >
-              Recommended for you
-            </Text>
-            <ScrollView
-              horizontal
-              style={{
-                paddingVertical: Spacing,
-              }}
-              showsHorizontalScrollIndicator={false}
-            >
-              {movies.slice(0, 4).map((movie) => (
-                <TouchableOpacity
-                  key={movie.id}
-                  style={{
-                    height: MovieHeight,
-                    width: MovieWidth,
-                    borderRadius: Spacing / 2,
-                    overflow: "hidden",
-                    marginRight: Spacing,
-                  }}
-                >
-                  <Image
-                    source={movie.image}
-                    style={{ width: "100%", height: "100%" }}
-                  />
-                </TouchableOpacity>
-              ))}
-            </ScrollView>
-          </View>
-          <View
-            style={{
-              paddingHorizontal: Spacing * 2,
-            }}
-          >
-            <Text
-              style={{
-                fontSize: FontSize.medium,
-                color: Colors.text,
-                fontFamily: Font["poppins-bold"],
-              }}
-            >
-              Originals
-            </Text>
-            <ScrollView
-              horizontal
-              style={{
-                paddingVertical: Spacing,
-              }}
-              showsHorizontalScrollIndicator={false}
-            >
-              {movies.slice(4, 9).map((movie) => (
-                <TouchableOpacity
-                  key={movie.id}
-                  style={{
-                    height: MovieHeight,
-                    width: MovieWidth,
-                    borderRadius: Spacing / 2,
-                    overflow: "hidden",
-                    marginRight: Spacing,
-                  }}
-                >
-                  <Image
-                    source={movie.image}
-                    style={{ width: "100%", height: "100%" }}
-                  />
-                </TouchableOpacity>
-              ))}
-            </ScrollView>
-          </View>
-        </SafeAreaView>
-      </ScrollView>
+          <MoviesList title="Recommended For You" movies={movies.slice(0, 4)} />
+          <MoviesList title="Originals" movies={movies.slice(4, 9)} />
+        </ScrollView>
+      </SafeAreaView>
     </LinearGradient>
   );
 };
