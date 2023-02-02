@@ -1,21 +1,23 @@
 import {
-  Image,
-  ImageBackground,
-  SafeAreaView,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
   View,
+  Text,
+  ScrollView,
+  ImageBackground,
+  TouchableOpacity,
+  SafeAreaView,
+  Image,
 } from "react-native";
 import React from "react";
-import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { RootStackParamList } from "../types";
 import { LinearGradient } from "expo-linear-gradient";
 import Colors from "../constants/Colors";
+import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { RootStackParamList } from "../types";
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import Spacing from "../constants/Spacing";
+import FontSize from "../constants/FontSize";
 import Font from "../constants/Font";
+import DotSeparator from "../components/DotSeparator";
+import DetailFooter from "../components/DetailFooter";
 
 type Props = NativeStackScreenProps<RootStackParamList, "Detail">;
 
@@ -24,77 +26,77 @@ const CoverHeight = 300;
 const DetailScreen: React.FC<Props> = ({ route, navigation }) => {
   const movie = route.params.movie;
   return (
-    <LinearGradient colors={[Colors.dark, Colors.black]} style={{ flex: 1 }}>
-      <ScrollView
-        style={{
-          flex: 1,
-        }}
-      >
+    <LinearGradient
+      colors={[Colors.dark, Colors.black]}
+      style={{
+        flex: 1,
+      }}
+    >
+      <ScrollView>
         <ImageBackground
-          source={movie.cover}
           style={{
             height: CoverHeight,
-            width: "100%",
           }}
+          source={movie.cover}
         >
           <SafeAreaView>
             <TouchableOpacity
               onPress={() => navigation.goBack()}
               style={{
+                height: Spacing * 3.5,
+                width: Spacing * 3.5,
                 backgroundColor: Colors.background,
-                width: Spacing * 4,
-                height: Spacing * 4,
-                borderRadius: Spacing * 2,
                 justifyContent: "center",
                 alignItems: "center",
+                borderRadius: Spacing * 2,
                 alignSelf: "flex-end",
                 marginRight: Spacing * 3,
               }}
             >
-              <Ionicons name="close" size={Spacing * 2.5} color={Colors.text} />
+              <Ionicons name="close" size={Spacing * 2} color={Colors.text} />
             </TouchableOpacity>
           </SafeAreaView>
         </ImageBackground>
+
         <View
           style={{
             padding: Spacing * 2,
           }}
         >
           <Image
+            source={movie.logo}
+            resizeMode="contain"
             style={{
               height: Spacing * 10,
               width: Spacing * 20,
+              marginBottom: Spacing,
             }}
-            resizeMode="contain"
-            source={movie.logo}
           />
+
           <View
             style={{
-              marginVertical: Spacing * 2,
               flexDirection: "row",
             }}
           >
             <TouchableOpacity
               style={{
                 paddingHorizontal: Spacing * 2,
-                backgroundColor: Colors.secondary,
-                paddingVertical: Spacing,
                 flexDirection: "row",
-                borderRadius: Spacing,
+                backgroundColor: Colors.secondary,
+                height: Spacing * 4,
+                borderRadius: Spacing / 2,
                 justifyContent: "center",
                 alignItems: "center",
               }}
             >
               <Ionicons
                 name="play"
-                size={Spacing * 2}
+                size={Spacing * 2.5}
                 color={Colors.onSecondary}
               />
               <Text
                 style={{
-                  fontSize: Spacing * 1.4,
-                  fontFamily: Font["poppins-regular"],
-                  marginLeft: Spacing / 2,
+                  color: Colors.onSecondary,
                 }}
               >
                 PLAY
@@ -102,49 +104,129 @@ const DetailScreen: React.FC<Props> = ({ route, navigation }) => {
             </TouchableOpacity>
             <TouchableOpacity
               style={{
-                paddingHorizontal: Spacing,
-                backgroundColor: Colors.black,
-                paddingVertical: Spacing,
                 flexDirection: "row",
-                borderRadius: Spacing * 5,
-                marginLeft: Spacing,
-                borderColor: Colors.border,
-                borderWidth: 2,
+                backgroundColor: Colors.black,
+                height: Spacing * 4,
+                width: Spacing * 4,
+                borderRadius: Spacing * 2,
                 justifyContent: "center",
                 alignItems: "center",
+                marginLeft: Spacing,
+                borderWidth: 2,
+                borderColor: Colors.onPrimary,
               }}
             >
-              <Ionicons
-                name="add"
-                size={Spacing * 2}
+              <MaterialCommunityIcons
+                name="plus"
+                size={Spacing * 2.5}
                 color={Colors.onPrimary}
               />
             </TouchableOpacity>
             <TouchableOpacity
               style={{
-                backgroundColor: Colors.black,
-                paddingVertical: Spacing,
                 flexDirection: "row",
-                marginLeft: Spacing,
-                borderColor: Colors.border,
-                borderWidth: 2,
-                justifyContent: "center",
-                alignItems: "center",
+                backgroundColor: Colors.black,
                 height: Spacing * 4,
                 width: Spacing * 4,
-                borderRadius: Spacing * 3,
+                borderRadius: Spacing * 2,
+                justifyContent: "center",
+                alignItems: "center",
+                marginLeft: Spacing,
+                borderWidth: 2,
+                borderColor: Colors.onPrimary,
               }}
             >
               <MaterialCommunityIcons
                 name="download"
-                size={Spacing * 2}
+                size={Spacing * 2.5}
                 color={Colors.onPrimary}
               />
             </TouchableOpacity>
           </View>
-        </View>
-        <View>
-          <Text>{movie.year}</Text>
+
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              marginVertical: Spacing,
+              flexWrap: "wrap",
+            }}
+          >
+            <Text
+              style={{
+                fontSize: FontSize.medium,
+                color: Colors.text,
+                fontFamily: Font["poppins-regular"],
+              }}
+            >
+              {movie.year}
+            </Text>
+            <DotSeparator />
+            <Text
+              style={{
+                fontSize: FontSize.medium,
+                color: Colors.text,
+                fontFamily: Font["poppins-regular"],
+              }}
+            >
+              {movie.length}
+            </Text>
+            <DotSeparator />
+            {movie.tags.map((tag, index) => (
+              <View
+                key={tag.id}
+                style={{
+                  flexDirection: "row",
+                }}
+              >
+                <TouchableOpacity>
+                  <Text
+                    style={{
+                      fontSize: FontSize.medium,
+                      color: Colors.text,
+                      fontFamily: Font["poppins-regular"],
+                    }}
+                  >
+                    {tag.name}
+                  </Text>
+                </TouchableOpacity>
+                {movie.tags.length - 1 !== index && (
+                  <Text
+                    style={{
+                      fontSize: FontSize.medium,
+                      color: Colors.text,
+                      fontFamily: Font["poppins-regular"],
+                    }}
+                  >
+                    {movie.tags.length - 2 === index ? " and " : ", "}
+                  </Text>
+                )}
+              </View>
+            ))}
+            <DotSeparator />
+            <Text
+              style={{
+                fontSize: FontSize.medium,
+                color: Colors.text,
+                fontFamily: Font["poppins-regular"],
+              }}
+            >
+              {movie.quality}
+            </Text>
+          </View>
+          <View>
+            <Text
+              style={{
+                fontSize: FontSize.large,
+                color: Colors.text,
+                fontFamily: Font["poppins-regular"],
+              }}
+            >
+              {movie.shortInfo}
+            </Text>
+          </View>
+
+          <DetailFooter />
         </View>
       </ScrollView>
     </LinearGradient>
@@ -152,5 +234,3 @@ const DetailScreen: React.FC<Props> = ({ route, navigation }) => {
 };
 
 export default DetailScreen;
-
-const styles = StyleSheet.create({});
