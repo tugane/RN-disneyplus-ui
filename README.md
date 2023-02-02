@@ -3,7 +3,7 @@
 
 ![Image](https://github.com/tugane/RN-disneyplus-ui/blob/main/assets/images/cover.png)
 
-**Source Code** [Link](https://github.com/tugane/RN-disneyplus-ui-starter)
+**Starter Code** [Link](https://github.com/tugane/RN-disneyplus-ui-starter)
 
 ## Get Started
 
